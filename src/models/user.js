@@ -41,6 +41,9 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    profileImage: {
+      type: Buffer,
+    },
   },
   {
     timestamps: true,
@@ -58,6 +61,7 @@ userSchema.methods.toJSON = function () {
 
   delete user.password;
   delete user.tokens;
+  delete user.profileImage;
 
   return user;
 };
@@ -67,7 +71,7 @@ userSchema.methods.generateAuthToken = async function () {
   const token = jwt.sign(
     { _id: this._id.toString() },
     "node-express-mongodb-mongoose-jwt",
-    { expiresIn: "45d" }
+    { expiresIn: "30d" }
   );
 
   this.tokens = this.tokens.concat({ token });

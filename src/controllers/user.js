@@ -1,4 +1,5 @@
 import { User } from "../models/user.js";
+import sharp from "sharp";
 
 // Signup user
 export const signUpUser = async (req, res) => {
@@ -88,4 +89,40 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
+};
+
+// Upload profile image
+export const uploadImage = async (req, res) => {
+  const buffer = await sharp(req.file.buffer)
+    .resize({
+      width: 250,
+      height: 250,
+    })
+    .png()
+    .toBuffer();
+
+  req.user.profileImage = buffer;
+  await req.user.save();
+
+  res.status(200).send({ message: "Image uploaded" });
+};
+
+// Get profile image
+export const getProfileImage = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user || !user.profileImage) throw new Error("Not found");
+
+    res.set("Content-Type", "image/png");
+    res.status(200).send(user.profileImage);
+  } catch (error) {
+    res.status(404).send({ message: error.message });
+  }
+};
+
+// Delete profile image
+export const deleteImage = async (req, res) => {
+  req.user.profileImage = undefined;
+  await req.user.save();
+  res.status(200).send({ message: "Image deleted" });
 };

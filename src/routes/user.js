@@ -7,8 +7,14 @@ import {
   updateUser,
   logoutUser,
   logoutAllSessions,
+  uploadImage,
+  deleteImage,
+  getProfileImage,
 } from "../controllers/user.js";
+
 import { auth } from "../middlewares/auth.js";
+import { uploadErrorHandler } from "../middlewares/uploadErrorHandler.js";
+import { uploader } from "../utils/uploader.js";
 
 const router = express.Router();
 
@@ -32,5 +38,20 @@ router.patch("/me", auth, updateUser);
 
 // Delete a user
 router.delete("/me", auth, deleteUser);
+
+// Upload profile image
+router.post(
+  "/me/profileImage",
+  auth,
+  uploader.single("upload"),
+  uploadImage,
+  uploadErrorHandler
+);
+
+// Get profile image
+router.get("/:id/profileImage", auth, getProfileImage);
+
+// Delete profile image
+router.delete("/me/profileImage", auth, deleteImage);
 
 export default router;

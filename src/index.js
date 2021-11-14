@@ -2,8 +2,6 @@ import express from "express";
 import { dbConnection } from "./database/db-connection.js";
 import userRoutes from "./routes/user.js";
 import taskRoutes from "./routes/task.js";
-import { Task } from "./models/task.js";
-import { User } from "./models/user.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
