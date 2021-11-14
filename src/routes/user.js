@@ -19,7 +19,7 @@ import { uploader } from "../utils/uploader.js";
 const router = express.Router();
 
 // Signup user
-router.post("/", signUpUser);
+router.post("/signUp", signUpUser);
 
 // Login user
 router.post("/login", loginUser);
